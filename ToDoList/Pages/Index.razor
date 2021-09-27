@@ -1,0 +1,70 @@
+@page "/"
+@using ToDoList.Models
+@using Task = ToDoList.Models.Task
+
+@foreach (var task in Tasks)
+{
+    <Task Id="@task.Id" Name="@task.Name" OnDelete="OnDeleteTask" OnDone="OnDoneTask"></Task>
+}
+
+@code
+{
+    [Inject]
+    public AppDbContext AppDbContext { get; set; }
+
+    public List<Task> Tasks { get; set; } = new();
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadData();
+    }
+    
+    private void LoadData()
+    {
+        Tasks = AppDbContext.Tasks.ToList();
+    }
+
+    private void OnDeleteTask(int id)
+    {
+        Console.WriteLine("Delete has been triggered for id " + id);
+    }
+
+    private void OnDoneTask(int id)
+    {
+        Console.WriteLine("Done has been triggered for id " + id);
+    }
+}
+
+@* @for (int i = 0; i < 10; i++) *@
+@* { *@
+@*     var value = i; *@
+@*      *@
+@*     <ListItem>@value</ListItem> *@
+@* } *@
+@* *@
+@* <EditForm Model="@this" OnValidSubmit="OnValidSubmit"> *@
+@*      *@
+@*     <InputText @bind-Value="Name" /> *@
+@* *@
+@*     <button type="submit">Submit</button> *@
+@* </EditForm> *@
+@* *@
+@* @foreach (var input in Values) *@
+@* { *@
+@*     <p>@input</p> *@
+@* } *@
+@* @if (!string.IsNullOrEmpty(Name)) *@
+@* { *@
+@*      *@
+@* } *@
+@* @code *@
+@* { *@
+@*     public string Name { get; set; } = ""; *@
+@*     public List<string> Values { get; set; } = new(); *@
+@* *@
+@*     private void OnValidSubmit() *@
+@*     { *@
+@*         Values.Add(Name); *@
+@*     } *@
+@* } *@

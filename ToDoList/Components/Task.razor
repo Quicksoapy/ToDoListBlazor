@@ -1,0 +1,21 @@
+﻿<h3>@Name</h3>
+
+<button @onclick="OnDeleteClick">Delete</button>
+<button @onclick="OnDoneClick">Done</button>
+@code {
+    [Parameter] public int Id { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public EventCallback<int> OnDelete { get; set; }
+    [Parameter] public EventCallback<int> OnDone { get; set; }
+
+    private void OnDeleteClick()
+    {
+        OnDelete.InvokeAsync(Id);
+    }
+
+    private void OnDoneClick()
+    {
+        OnDone.InvokeAsync(Id);
+    }
+
+}
