@@ -28,11 +28,25 @@
     private void OnDeleteTask(int id)
     {
         Console.WriteLine("Delete has been triggered for id " + id);
-    }
+        var task = AppDbContext.Tasks.FirstOrDefault(x => x.Id  == id);
+        if(task != null){
+            AppDbContext.RemoveRange(task);
+            AppDbContext.SaveChanges();
+        }
+        LoadData();
+    } 
+
 
     private void OnDoneTask(int id)
     {
         Console.WriteLine("Done has been triggered for id " + id);
+        var task = AppDbContext.Tasks.FirstOrDefault(x => x.Id  == id);
+        if(task != null)
+        {
+            task.IsDone = true;
+            AppDbContext.SaveChanges();
+        }
+        LoadData();
     }
 }
 
