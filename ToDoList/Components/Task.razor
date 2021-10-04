@@ -1,8 +1,34 @@
-﻿<h3>@Name</h3>
+﻿@using ToDoList.Models
+<h3>@Name</h3>
 
+<label>
+    @if (_task.IsDone == true)
+    {
+        <p>Done</p>
+    }
+    else
+    {
+        <p>Not Done</p>
+    }
+</label>
 <button @onclick="OnDeleteClick">Delete</button>
 <button @onclick="OnDoneClick">Done</button>
+
 @code {
+    [Inject] public AppDbContext AppDbContext { get; set; }
+    private Models.Task _task;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadData();
+    }
+    
+    private void LoadData()
+    {
+        _task = AppDbContext.Tasks.First(t => t.Id == Id);
+    }
+
+
     [Parameter] public int Id { get; set; }
     [Parameter] public string Name { get; set; }
     [Parameter] public EventCallback<int> OnDelete { get; set; }

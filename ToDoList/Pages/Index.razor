@@ -1,6 +1,14 @@
 @page "/"
 @using ToDoList.Models
 @using Task = ToDoList.Models.Task
+<EditForm Model="@this" OnValidSubmit="OnValidSubmit"> 
+    <label>Name:</label>
+    <InputText @bind-Value="NewTaskName" /> 
+    <label>Description:</label>
+    <InputText @bind-Value="NewTaskDescription"></InputText>
+
+    <button type="submit">Submit</button>
+</EditForm> 
 
 @foreach (var task in Tasks)
 {
@@ -9,9 +17,8 @@
 
 @code
 {
-    [Inject]
-    public AppDbContext AppDbContext { get; set; }
-
+    [Inject] public AppDbContext AppDbContext { get; set; }
+    
     public List<Task> Tasks { get; set; } = new();
     
     protected override void OnInitialized()
@@ -22,7 +29,7 @@
     
     private void LoadData()
     {
-        Tasks = AppDbContext.Tasks.ToList();
+        Tasks = AppDbContext.Tasks.OrderBy(t => t.Id).ToList();
     }
 
     private void OnDeleteTask(int id)
@@ -35,8 +42,7 @@
         }
         LoadData();
     } 
-
-
+    
     private void OnDoneTask(int id)
     {
         Console.WriteLine("Done has been triggered for id " + id);
@@ -48,37 +54,21 @@
         }
         LoadData();
     }
-}
 
-@* @for (int i = 0; i < 10; i++) *@
-@* { *@
-@*     var value = i; *@
-@*      *@
-@*     <ListItem>@value</ListItem> *@
-@* } *@
-@* *@
-@* <EditForm Model="@this" OnValidSubmit="OnValidSubmit"> *@
-@*      *@
-@*     <InputText @bind-Value="Name" /> *@
-@* *@
-@*     <button type="submit">Submit</button> *@
-@* </EditForm> *@
-@* *@
-@* @foreach (var input in Values) *@
-@* { *@
-@*     <p>@input</p> *@
-@* } *@
-@* @if (!string.IsNullOrEmpty(Name)) *@
-@* { *@
-@*      *@
-@* } *@
-@* @code *@
-@* { *@
-@*     public string Name { get; set; } = ""; *@
-@*     public List<string> Values { get; set; } = new(); *@
-@* *@
-@*     private void OnValidSubmit() *@
-@*     { *@
-@*         Values.Add(Name); *@
-@*     } *@
-@* } *@
+    public string NewTaskName { get; set; }
+    public string NewTaskDescription { get; set; }
+
+    private void OnValidSubmit()
+    {
+        AppDbContext.Tasks.Add(new Task()
+        {
+            Description = NewTaskDescription,
+            IsDone = false,
+            Name = NewTaskName
+        });
+        AppDbContext.SaveChanges();
+        LoadData();
+        InvokeAsync(StateHasChanged);
+    }
+
+}
