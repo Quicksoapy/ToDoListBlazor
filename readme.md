@@ -4,7 +4,7 @@ ToDoListBlazor is a todo-list made in blazor to learn ASP.NET Core.
 
 ## Installation
 
-Currently, there is no version made for use. You can compile it and set up a database for it yourself! I personally used postgres.
+Currently, there is no version made for use. You can compile it and set up a database for it yourself! I personally used postgres in a docker client.
 
 ## Usage
 
